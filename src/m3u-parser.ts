@@ -80,10 +80,6 @@ export class M3uParser {
     const trackInformation = item.substring(
       directive == null ? 0 : directive.length + 1
     );
-    // const firstSemicolonIndex = item.indexOf(":");
-    // const directive = item.substring(0, firstSemicolonIndex);
-    // const trackInformation = item.substring(firstSemicolonIndex + 1);
-    console.log("item >>", item);
     switch (directive) {
       case M3uDirectives.EXTM3U: {
         playlist.attr = this.getAttributes(trackInformation, ignoreErrors);
