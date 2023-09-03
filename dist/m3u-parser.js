@@ -58,10 +58,6 @@ class M3uParser {
         var _a;
         const directive = (_a = item.match(/^#[A-Z1-9]+/)) === null || _a === void 0 ? void 0 : _a[0];
         const trackInformation = item.substring(directive == null ? 0 : directive.length + 1);
-        // const firstSemicolonIndex = item.indexOf(":");
-        // const directive = item.substring(0, firstSemicolonIndex);
-        // const trackInformation = item.substring(firstSemicolonIndex + 1);
-        console.log("item >>", item);
         switch (directive) {
             case m3u_playlist_1.M3uDirectives.EXTM3U: {
                 playlist.attr = this.getAttributes(trackInformation, ignoreErrors);
