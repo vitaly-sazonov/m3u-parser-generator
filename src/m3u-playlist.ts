@@ -1,18 +1,19 @@
-import {M3uGenerator} from "./m3u-generator";
+import { M3uGenerator } from "./m3u-generator";
 
-export const M3U_COMMENT = '#'
+export const M3U_COMMENT = "#";
 export const DEFAULT_MEDIA_DURATION = -1;
 export enum M3uDirectives {
-  EXTM3U = '#EXTM3U',
-  EXTINF = '#EXTINF',
-  PLAYLIST = '#PLAYLIST',
-  EXTGRP = '#EXTGRP',
+  EXTM3U = "#EXTM3U",
+  EXTINF = "#EXTINF",
+  PLAYLIST = "#PLAYLIST",
+  EXTGRP = "#EXTGRP",
 }
 
 /**
  * M3u playlist object
  */
 export class M3uPlaylist {
+  attr: M3uAttributes | null = null;
   /**
    * Title of playlist
    * @example code
@@ -25,7 +26,7 @@ export class M3uPlaylist {
    * #PLAYLIST:Test TV
    * ```
    */
-  title = '';
+  title = "";
   /**
    * M3u media objects
    * @example
@@ -60,7 +61,6 @@ export class M3uPlaylist {
  * ```
  */
 export class M3uMedia {
-
   /**
    * Name of media
    */
@@ -97,23 +97,23 @@ export class M3uAttributes {
   /**
    * tvg-id attribute, widely used
    */
-  'tvg-id'?: string;
+  "tvg-id"?: string;
   /**
    * tvg-language attribute, widely used
    */
-  'tvg-language'?: string;
+  "tvg-language"?: string;
   /**
    * tvg-country attribute, widely used
    */
-  'tvg-country'?: string;
+  "tvg-country"?: string;
   /**
    * tvg-logo attribute, widely used
    */
-  'tvg-logo'?: string;
+  "tvg-logo"?: string;
   /**
    * group-title attribute, widely used
    */
-  'group-title'?: string;
+  "group-title"?: string;
 
   /**
    * unknown user defined attribute

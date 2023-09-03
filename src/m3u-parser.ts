@@ -3,14 +3,13 @@ import {
   M3uMedia,
   M3uAttributes,
   M3uDirectives,
-  M3U_COMMENT
+  M3U_COMMENT,
 } from "./m3u-playlist";
 
 /**
  * M3u parser class to parse m3u playlist string to playlist object
  */
 export class M3uParser {
-
   /**
    * Get m3u attributes object from attributes string
    * @param attributesString e.g. 'tvg-id="" group-title=""'
@@ -18,18 +17,22 @@ export class M3uParser {
    * @returns attributes object e.g. {"tvg-id": "", "group-title": ""}
    * @private
    */
-  private static getAttributes(attributesString: string, ignoreErrors: boolean): M3uAttributes {
+  private static getAttributes(
+    attributesString: string,
+    ignoreErrors: boolean
+  ): M3uAttributes {
     const attributes: M3uAttributes = new M3uAttributes();
     if (!attributesString) {
       return attributes;
     }
     const attributeValuePair = attributesString.split('" ');
     attributeValuePair.forEach((item) => {
-      const [key, value] = item.split('="');
+      let [key, value] = item.split('="');
       if (!ignoreErrors && value == null) {
         throw new Error(`Attribute value can't be null!`);
       }
-      attributes[key] = value.replace('"', '');
+      key = key.trim();
+      attributes[key] = value.replace('"', "");
     });
     return attributes;
   }
@@ -41,13 +44,18 @@ export class M3uParser {
    * @param ignoreErrors - ignore errors in file and try to parse it with it
    * @private
    */
-  private static processMedia(trackInformation: string, media: M3uMedia, ignoreErrors: boolean): void {
-    const lastCommaIndex = trackInformation.lastIndexOf(',');
+  private static processMedia(
+    trackInformation: string,
+    media: M3uMedia,
+    ignoreErrors: boolean
+  ): void {
+    const lastCommaIndex = trackInformation.lastIndexOf(",");
     const durationAttributes = trackInformation.substring(0, lastCommaIndex);
     media.name = trackInformation.substring(lastCommaIndex + 1);
 
-    const firstSpaceIndex = durationAttributes.indexOf(' ');
-    const durationEndIndex = firstSpaceIndex > 0 ? firstSpaceIndex : durationAttributes.length;
+    const firstSpaceIndex = durationAttributes.indexOf(" ");
+    const durationEndIndex =
+      firstSpaceIndex > 0 ? firstSpaceIndex : durationAttributes.length;
     media.duration = Number(durationAttributes.substring(0, durationEndIndex));
     const attributes = durationAttributes.substring(durationEndIndex + 1);
 
@@ -62,11 +70,25 @@ export class M3uParser {
    * @param ignoreErrors - ignore errors in file and try to parse it with it
    * @private
    */
-  private static processDirective(item: string, playlist: M3uPlaylist, media: M3uMedia, ignoreErrors: boolean): void {
-    const firstSemicolonIndex = item.indexOf(':');
-    const directive = item.substring(0, firstSemicolonIndex);
-    const trackInformation = item.substring(firstSemicolonIndex + 1);
-    switch(directive) {
+  private static processDirective(
+    item: string,
+    playlist: M3uPlaylist,
+    media: M3uMedia,
+    ignoreErrors: boolean
+  ): void {
+    const directive = item.match(/^#[A-Z1-9]+/)?.[0];
+    const trackInformation = item.substring(
+      directive == null ? 0 : directive.length + 1
+    );
+    // const firstSemicolonIndex = item.indexOf(":");
+    // const directive = item.substring(0, firstSemicolonIndex);
+    // const trackInformation = item.substring(firstSemicolonIndex + 1);
+    console.log("item >>", item);
+    switch (directive) {
+      case M3uDirectives.EXTM3U: {
+        playlist.attr = this.getAttributes(trackInformation, ignoreErrors);
+        break;
+      }
       case M3uDirectives.EXTINF: {
         this.processMedia(trackInformation, media, ignoreErrors);
         break;
@@ -89,16 +111,19 @@ export class M3uParser {
    * @returns parsed m3u playlist object
    * @private
    */
-  private static getPlaylist(lines: string[], ignoreErrors: boolean): M3uPlaylist {
+  private static getPlaylist(
+    lines: string[],
+    ignoreErrors: boolean
+  ): M3uPlaylist {
     const playlist = new M3uPlaylist();
-    let media = new M3uMedia('');
-    lines.forEach(item => {
+    let media = new M3uMedia("");
+    lines.forEach((item) => {
       if (this.isDirective(item)) {
         this.processDirective(item, playlist, media, ignoreErrors);
       } else {
         media.location = item;
         playlist.medias.push(media);
-        media = new M3uMedia('');
+        media = new M3uMedia("");
       }
     });
     return playlist;
@@ -142,7 +167,10 @@ export class M3uParser {
       throw new Error(`m3uString can't be null!`);
     }
 
-    const lines = m3uString.split('\n').map(item => item.trim()).filter(item => item != '');
+    const lines = m3uString
+      .split("\n")
+      .map((item) => item.trim())
+      .filter((item) => item != "");
 
     if (!ignoreErrors && !this.isValidM3u(lines)) {
       throw new Error(`Missing ${M3uDirectives.EXTM3U} directive!`);
