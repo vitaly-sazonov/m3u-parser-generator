@@ -135,7 +135,7 @@ class M3uParser {
         const trackInformation = item.substring(directive == null ? 0 : directive.length + 1);
         switch (directive) {
             case m3u_playlist_1.M3uDirectives.EXTM3U: {
-                playlist.attr = this.getAttributes(trackInformation, ignoreErrors);
+                playlist.attributes = this.getAttributes(trackInformation, ignoreErrors);
                 break;
             }
             case m3u_playlist_1.M3uDirectives.EXTINF: {
@@ -240,7 +240,7 @@ var M3uDirectives;
  */
 class M3uPlaylist {
     constructor() {
-        this.attr = null;
+        this.attributes = null;
         /**
          * Title of playlist
          * @example code

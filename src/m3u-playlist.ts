@@ -13,7 +13,7 @@ export enum M3uDirectives {
  * M3u playlist object
  */
 export class M3uPlaylist {
-  attr: M3uAttributes | null = null;
+  attributes: M3uAttributes | null = null;
   /**
    * Title of playlist
    * @example code

@@ -82,7 +82,10 @@ export class M3uParser {
     );
     switch (directive) {
       case M3uDirectives.EXTM3U: {
-        playlist.attr = this.getAttributes(trackInformation, ignoreErrors);
+        playlist.attributes = this.getAttributes(
+          trackInformation,
+          ignoreErrors
+        );
         break;
       }
       case M3uDirectives.EXTINF: {

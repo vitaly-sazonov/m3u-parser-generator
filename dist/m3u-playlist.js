@@ -16,7 +16,7 @@ var M3uDirectives;
  */
 class M3uPlaylist {
     constructor() {
-        this.attr = null;
+        this.attributes = null;
         /**
          * Title of playlist
          * @example code
